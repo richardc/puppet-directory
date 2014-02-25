@@ -31,7 +31,20 @@ describe Puppet::Type.type(:directory) do
     @directory[:owner].should == 'me'
   end
 
+  it 'should fail with a numeric owner' do
+    expect {
+      Puppet::Type.type(:directory).new({:name => '/tmp', :owner => 0})
+    }.to raise_error /Parameter owner failed/
+  end
+
   it 'should have a group' do
     @directory[:group].should == 'us'
   end
+
+  it 'should fail with a numeric group' do
+    expect {
+      Puppet::Type.type(:directory).new({:name => '/tmp', :group => 0})
+    }.to raise_error /Parameter group failed/
+  end
+
 end

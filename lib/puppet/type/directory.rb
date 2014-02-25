@@ -18,13 +18,21 @@ Puppet::Type.newtype(:directory) do
   newproperty(:owner) do
     desc "The owner of the directory"
 
-    # TODO(richardc): validate/munge
+    validate do |value|
+      unless value =~ /^\w+/
+        raise ArgumentError, "%s is not a valid user name" % value
+      end
+    end
   end
 
   newproperty(:group) do
     desc "The group of the directory"
 
-    # TODO(richardc): validate/munge
+    validate do |value|
+      unless value =~ /^\w+/
+        raise ArgumentError, "%s is not a valid group name" % value
+      end
+    end
   end
 
   newproperty(:mode) do
@@ -37,8 +45,11 @@ Puppet::Type.newtype(:directory) do
   end
 
   autorequire(:directory) do
-    catalog.resources.find_all { |r|
-      r.is_a?(Puppet::Type.type(:directory)) and r[:target] == self[:path]
-    }
+    # TODO(richardc): autodepend on parent paths
+  end
+
+  autorequire(:file) do
+    # TODO(richardc): autodepend on parent paths, also check if ensure != file
+    # TODO(richardc): conflict with file resource with same path
   end
 end
