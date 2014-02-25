@@ -2,7 +2,7 @@ Puppet::Type.type(:directory).provide(:unix) do
   desc "Directory provider for UNIXy POSIXy things"
 
   def exists?
-    Dir.exist?(resource[:path])
+    File.exists?(resource[:path]) && File.directory?(resource[:path])
   end
 
   def create
@@ -14,7 +14,7 @@ Puppet::Type.type(:directory).provide(:unix) do
   end
 
   def owner
-    if Dir.exist?(resource[:path])
+    if exists?
       File.stat(resource[:path]).uid
     else
       return :absent
@@ -25,7 +25,7 @@ Puppet::Type.type(:directory).provide(:unix) do
   end
 
   def group
-    if Dir.exist?(resource[:path])
+    if exists?
       # TODO(richardc): should map to name?
       File.stat(resource[:path]).gid
     else
@@ -38,7 +38,7 @@ Puppet::Type.type(:directory).provide(:unix) do
   end
 
   def mode
-    if Dir.exists?(resource[:path])
+    if exists?
       "%o" % (File.stat(resource[:path]).mode & 007777)
     else
       :absent
