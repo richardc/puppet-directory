@@ -1,10 +1,13 @@
+require 'puppet/parameter/boolean'
+
 Puppet::Type.newtype(:directory) do
   @doc = "Manage a directory"
 
   ensurable
 
-  newproperty(:path, :namevar => true) do
+  newparam(:path, :namevar => true) do
     desc "The path of the directory"
+
     validate do |value|
       unless Puppet::Util.absolute_path?(value)
         fail Puppet::Error, "File paths must be fully qualified, not '#{value}'"
@@ -30,7 +33,7 @@ Puppet::Type.newtype(:directory) do
     # TODO(richardc): validate/munge
   end
 
-  newparameter(:recurse, :boolean => true, :parent => Puppet::Parameter::Boolean) do
+  newparam(:recurse, :boolean => true, :parent => Puppet::Parameter::Boolean) do
   end
 
   autorequire(:directory) do
