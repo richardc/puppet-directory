@@ -45,11 +45,15 @@ Puppet::Type.newtype(:directory) do
   end
 
   autorequire(:directory) do
-    # TODO(richardc): autodepend on parent paths
+    Pathname.new(self[:path]).parent.to_s
   end
 
   autorequire(:file) do
-    # TODO(richardc): autodepend on parent paths, also check if ensure != file
-    # TODO(richardc): conflict with file resource with same path
+    # try and avoid confusion, conflict with a file resource of the same path
+    if catalog.resource(:file, self[:path])
+      raise "Cannot have a File[#{self[:path]}] and Directory[#{self[:path]}]"
+    end
+
+    Pathname.new(self[:path]).parent.to_s
   end
 end
