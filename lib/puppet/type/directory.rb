@@ -12,6 +12,11 @@ Puppet::Type.newtype(:directory) do
       unless Puppet::Util.absolute_path?(value)
         fail Puppet::Error, "File paths must be fully qualified, not '#{value}'"
       end
+
+      # try and avoid headaches
+      if Pathname.new(value).root?
+        fail Puppet::Error, "Cannot manage the root directory"
+      end
     end
   end
 
