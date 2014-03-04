@@ -7,6 +7,20 @@ Puppet::Type.type(:directory).provide(:unix) do
 
   def create
     Dir.mkdir(resource[:path])
+
+    uid = nil
+    if resource[:owner]
+      uid = Etc.getpwnam(resource[:owner]).uid
+    end
+
+    gid = nil
+    if resource[:group]
+      gid = Etc.getgrnam(resource[:group]).gid
+    end
+
+    if uid or gid
+      File.chown(uid, gid, resource[:path])
+    end
   end
 
   def destroy
@@ -15,26 +29,30 @@ Puppet::Type.type(:directory).provide(:unix) do
 
   def owner
     if exists?
-      File.stat(resource[:path]).uid
+      uid = File.stat(resource[:path]).uid
+      Etc.getpwuid(uid).name
     else
       return :absent
     end
   end
 
   def owner=(newowner)
+    user = Etc.getpwnam(newowner)
+    File.chown(user.uid, nil, resource[:path])
   end
 
   def group
     if exists?
-      # TODO(richardc): should map to name?
-      File.stat(resource[:path]).gid
+      gid = File.stat(resource[:path]).gid
+      Etc.getgrgid(gid).name
     else
       return :absent
     end
   end
 
   def group=(newgroup)
-    File.chown(nil, newgroup, resource[:path])
+    group = Etc.getgrnam(newgroup)
+    File.chown(nil, group.gid, resource[:path])
   end
 
   def mode
