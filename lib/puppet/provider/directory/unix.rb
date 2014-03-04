@@ -6,7 +6,15 @@ Puppet::Type.type(:directory).provide(:unix) do
   end
 
   def create
-    Dir.mkdir(resource[:path])
+    if resource[:recurse]
+      segments = path_segments(resource[:path])
+      segments.each do |path|
+        next if File.exists?(path)
+        Dir.mkdir(path)
+      end
+    else
+      Dir.mkdir(resource[:path])
+    end
 
     uid = nil
     if resource[:owner]
@@ -65,5 +73,17 @@ Puppet::Type.type(:directory).provide(:unix) do
 
   def mode=(value)
     File.chmod(Integer("0" + value), resource[:path])
+  end
+
+  private
+
+  # recursively call basename to build up the list of path segments we need
+  def path_segments(path, segments = [])
+    if path == '/'
+      return segments
+    else
+      prefix, _ = File.split(path)
+      return path_segments(prefix, [path] + segments)
+    end
   end
 end

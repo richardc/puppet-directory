@@ -42,4 +42,33 @@ describe 'directory type' do
       it { should be_grouped_into('nogroup') }
     end
   end
+
+  describe 'recursion' do
+    it 'should create nested directories' do
+      pp = <<-EOS
+        directory { '/tmp/foo/bar/baz':
+          ensure => present,
+          recurse => true,
+          owner => 'nobody',
+          group => 'nogroup',
+        }
+      EOS
+
+      # Run it twice and test for idempotency
+      apply_manifest(pp, :catch_failures => true)
+      expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
+    end
+
+    describe file('/tmp/foo/bar') do
+      it { should be_directory }
+      it { should be_owned_by('root') }
+      it { should be_grouped_into('root') }
+    end
+
+    describe file('/tmp/foo/bar/baz') do
+      it { should be_directory }
+      it { should be_owned_by('nobody') }
+      it { should be_grouped_into('nogroup') }
+    end
+  end
 end
