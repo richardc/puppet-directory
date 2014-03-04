@@ -28,6 +28,8 @@ Puppet::Type.newtype(:directory) do
         raise ArgumentError, "%s is not a valid user name" % value
       end
     end
+
+    # TODO(richardc): munge to uid here?
   end
 
   newproperty(:group) do
@@ -38,6 +40,8 @@ Puppet::Type.newtype(:directory) do
         raise ArgumentError, "%s is not a valid group name" % value
       end
     end
+
+    # TODO(richardc): munge to gid here?
   end
 
   newproperty(:mode) do
