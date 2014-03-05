@@ -1,7 +1,5 @@
 HOSTS:
   ubuntu-1210-x64:
-    roles:
-      - master
     platform: ubuntu-12.10-x64
     image: ubuntu_1210_curl_rubygems
     hypervisor: docker
