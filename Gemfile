@@ -6,8 +6,9 @@ group :development, :test do
   gem 'puppetlabs_spec_helper',  :require => false
   gem 'serverspec',              :require => false
   gem 'simplecov',               :require => false
-  gem 'beaker',                  :require => false, :path => '/Users/richardc/src/beaker'
+  gem 'beaker',                  :require => false
   gem 'beaker-rspec',            :require => false
+  gem 'docker-api'
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']

@@ -1,7 +1,7 @@
 HOSTS:
-  ubuntu-1210-x64:
-    platform: ubuntu-12.10-x64
-    image: ubuntu_1210_curl_rubygems
+  ubuntu-1204-x64:
+    platform: ubuntu-12.04-x64
+    image: ubuntu_1204_beaker
     hypervisor: docker
 CONFIG:
   type: foss
@@ -9,12 +9,13 @@ CONFIG:
 ---
 That's a YAML document marker, we're safe to talk here.
 
-The ubuntu_1210_curl_rubygems image is built like so:
+The ubuntu_1204_beaker image is preinstalled with the packages
+beaker will try and install.  It's built like so:
 
-docker build -t ubuntu_1210_curl_rubygems - <<EOF
-FROM ubuntu:12.10
+docker build -t ubuntu_1204_beaker - <<EOF
+FROM ubuntu:12.04
 RUN apt-get update
-RUN apt-get -y install curl rubygems
+RUN apt-get -y install curl rubygems openssh-server openssh-client ntpdate lsb-release
 EOF
 
 It's quite the timesaver
