@@ -18,7 +18,7 @@ describe Puppet::Type.type(:directory) do
   end
 
   it 'should have a path' do
-    @directory[:path].should == '/usr/lib/madeup'
+    expect(@directory[:path]).to eq('/usr/lib/madeup')
   end
 
   it 'should fail with a non-qualified path' do
@@ -28,7 +28,7 @@ describe Puppet::Type.type(:directory) do
   end
 
   it 'should have an owner' do
-    @directory[:owner].should == 'me'
+    expect(@directory[:owner]).to eq('me')
   end
 
   it 'should fail with a numeric owner' do
@@ -38,7 +38,7 @@ describe Puppet::Type.type(:directory) do
   end
 
   it 'should have a group' do
-    @directory[:group].should == 'us'
+    expect(@directory[:group]).to eq('us')
   end
 
   it 'should fail with a numeric group' do
