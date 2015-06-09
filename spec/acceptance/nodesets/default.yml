@@ -1,33 +1,11 @@
 HOSTS:
-  ubuntu-1204-x64:
-    platform: ubuntu-12.04-x64
-    image: ubuntu_1204_beaker
-    hypervisor: docker
+  ubuntu-server-12042-x64:
+    roles:
+      - master
+    platform: ubuntu-server-12.04-amd64
+    box : ubuntu-server-12042-x64-vbox4210-nocm
+    box_url : http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-12042-x64-vbox4210-nocm.box
+    hypervisor : vagrant
 CONFIG:
   type: foss
-
----
-That's a YAML document marker, we're safe to talk here.
-
-The ubuntu_1204_beaker image is preinstalled with the packages
-beaker will try and install.  It's built like so:
-
-docker build -t ubuntu_1204_beaker - <<EOF
-FROM ubuntu:12.04
-RUN apt-get update
-RUN apt-get -y install curl rubygems openssh-server openssh-client ntpdate lsb-release
-EOF
-
-It's quite the timesaver
-
-    $ time bundle exec rspec spec/acceptance
-    [not many tests run]
-
-    Finished in 8.72 seconds
-    2 examples, 0 failures
-
-    real    0m45.026s
-    user    0m1.653s
-    sys     0m0.256s
-
-For more timesaving you might want to pre-compile puppet in too
+  vagrant_ssh_port_random: true
