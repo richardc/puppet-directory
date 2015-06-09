@@ -3,7 +3,8 @@ require 'beaker-rspec'
 hosts.each do |host|
   # Install Puppet
   install_package host, 'rubygems'
-  on host, 'gem install puppet --no-ri --no-rdoc'
+  puppet_version = ENV['PUPPET_GEM_VERSION'] || '~> 3.0'
+  on host, "gem install puppet --no-ri --no-rdoc -v '#{puppet_version}'"
   on host, "mkdir -p #{host['distmoduledir']}"
 end
 
